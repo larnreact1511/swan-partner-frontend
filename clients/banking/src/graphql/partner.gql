@@ -14,10 +14,6 @@ fragment TransactionDetails on Transaction {
     id
     createdAt
   }
-  account @include(if: $canViewAccount) {
-    id
-    language
-  }
   originTransaction @include(if: $canViewAccount) {
     id
     type

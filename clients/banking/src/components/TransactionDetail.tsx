@@ -40,7 +40,6 @@ import {
   GenerateTransactionStatementDocument,
   TransactionDocument,
   TransactionStatementDocument,
-  TransactionStatementLanguage,
 } from "../graphql/partner";
 import { NotFoundPage } from "../pages/NotFoundPage";
 import { formatCurrency, formatDateTime, locale, t } from "../utils/i18n";
@@ -131,9 +130,9 @@ export const TransactionDetail = ({
 
   const [isGeneratingStatement, setIsGeneratingStatement] = useState(false);
 
-  const generateStatement = ({ language }: { language: TransactionStatementLanguage }) => {
+  const generateStatement = () => {
     setIsGeneratingStatement(true);
-    generateTransactionStatement({ input: { transactionId, language } })
+    generateTransactionStatement({ input: { transactionId, language: locale.language } })
       .mapOk(data => data.generateTransactionStatement)
       .mapOkToResult(filterRejectionsToResult)
       .mapOkToResult(data => Option.fromNullable(data.transactionStatement).toResult(new Error()))
@@ -920,11 +919,7 @@ export const TransactionDetail = ({
                       color="current"
                       icon="arrow-download-filled"
                       loading={isGeneratingStatement}
-                      onPress={() =>
-                        generateStatement({
-                          language: transaction.account?.language ?? locale.language,
-                        })
-                      }
+                      onPress={() => generateStatement()}
                     >
                       {t("transaction.transactionConfirmation")}
                     </LakeButton>
